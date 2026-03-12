@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rubber Brand Times</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #f97316;
+      --accent-soft: #fed7aa;
+      --accent2: #22c55e;
+      --accent3: #3b82f6;
+      --text: #e5e7eb;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .shell {
+      width: 100%;
+      max-width: 1200px;
+      background: linear-gradient(135deg, #0b1120, #020617);
+      border-radius: 24px;
+      padding: 2px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+      position: relative;
+      overflow: hidden;
+    }
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -200px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(239, 68, 68, 0.28), transparent 60%),
+        radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.32), transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(244, 114, 182, 0.25), transparent 55%);
+      opacity: 0.9;
+      z-index: -1;
+      filter: blur(2px);
+    }
+    .inner {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.95), rgba(2,6,23,0.98));
+      border-radius: 22px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 800px) {
+      .inner {
+        grid-template-columns: 1fr;
+      }
+    }
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+      padding-bottom: 14px;
+      margin-bottom: 6px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: conic-gradient(from 150deg, #f97316, #22c55e, #3b82f6, #e11d48, #f97316);
+      padding: 3px;
+      position: relative;
+    }
+    .logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 30%, #020617, #020617 40%, #111827);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f97316;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-shadow: 0 0 14px rgba(248, 250, 252, 0.2);
+      font-size: 18px;
+    }
+    .title-block h1 {
+      font-size: 22px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .title-block p {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .tagline {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #f9a8d4;
+      background: rgba(15,23,42,0.85);
+      border-radius: 999px;
+      padding: 6px 14px;
+      border: 1px solid rgba(244, 114, 182, 0.4);
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tag-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.9);
+    }
+    /* Login panel */
+    .login-card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(15,23,42,0.97));
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.75);
+      padding: 16px 16px 18px;
+      max-width: 320px;
+      margin-left: auto;
+    }
+    .login-card h2 {
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+    .login-card p {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(30, 64, 175, 0.5);
+      color: #bfdbfe;
+      border: 1px solid rgba(191, 219, 254, 0.4);
+      margin-bottom: 10px;
+    }
+    .pill span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #3b82f6;
+      box-shadow: 0 0 7px rgba(59,130,246,0.9);
+    }
+    label {
+      font-size: 11px;
+      color: #e5e7eb;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .field {
+      margin-bottom: 10px;
+    }
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 9px;
+      border-radius: 11px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: rgba(15,23,42,0.95);
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    input[type="password"]:focus,
+    input[type="text"]:focus {
+      border-color: #f97316;
+      box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.08), 0 0 15px rgba(249,115,22,0.3);
+      background: rgba(15,23,42,1);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      color: #111827;
+      box-shadow:
+        0 8px 25px rgba(249,115,22,0.8),
+        0 0 0 1px rgba(15,23,42,0.9);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+      margin-top: 2px;
+      width: 100%;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 12px 35px rgba(249,115,22,0.9),
+        0 0 0 1px rgba(15,23,42,1);
+    }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow:
+        0 4px 15px rgba(249,115,22,0.6),
+        0 0 0 1px rgba(15,23,42,0.9);
+    }
+    .error {
+      font-size: 11px;
+      color: #fca5a5;
+      min-height: 14px;
+      margin-top: 4px;
+    }
+    /* Main content */
+    .content {
+      display: none;
+      grid-column: 1 / -1;
+      margin-top: 10px;
+      gap: 18px;
+      grid-template-columns: minmax(0, 1.3fr) minmax(260px, 1fr);
+    }
+    .content.visible {
+      display: grid;
+    }
+    .section {
+      background: linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.94));
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 12px 35px rgba(15,23,42,0.85);
+      padding: 14px 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      background: radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.04), transparent 60%);
+      pointer-events: none;
+    }
+    .section h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      color: #9ca3af;
+    }
+    .items {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 2px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .item {
+      border-radius: 12px;
+      padding: 9px 10px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(15,23,42,1));
+      border: 1px solid rgba(55,65,81,0.75);
+      position: relative;
+      box-shadow: 0 8px 22px rgba(15,23,42,0.75);
+    }
+    .item-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+    .item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+    .item-date {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .item-body {
+      font-size: 12px;
+      color: #d1d5db;
+      line-height: 1.4;
+    }
+    .item-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #facc15;
+      margin-top: 4px;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .pill-small {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+    }
+    .pill-small.red {
+      border-color: rgba(248,113,113,0.8);
+      color: #fecaca;
+    }
+    .pill-small.blue {
+      border-color: rgba(56,189,248,0.8);
+      color: #bae6fd;
+    }
+    .pill-small.green {
+      border-color: rgba(52,211,153,0.9);
+      color: #bbf7d0;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(148,163,184,0.4), transparent);
+      margin: 10px 0;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .form-grid .field {
+      margin-bottom: 0;
+    }
+    textarea {
+      width: 100%;
+      min-height: 70px;
+      max-height: 120px;
+      resize: vertical;
+      padding: 8px 9px;
+      border-radius: 11px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: rgba(15,23,42,0.95);
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+    }
+    textarea:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.08), 0 0 15px rgba(34,197,94,0.35);
+      background: rgba(15,23,42,1);
+    }
+    .btn-secondary {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.92);
+      color: #e5e7eb;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-secondary span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.9);
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .today-label {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .logout {
+      font-size: 11px;
+      color: #fca5a5;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .count-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(56,189,248,0.15);
+      border: 1px solid rgba(56,189,248,0.6);
+      color: #bae6fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="inner">
+      <header>
+        <div class="brand">
+          <div class="logo">
+            <div class="logo-inner">R</div>
+          </div>
+          <div class="title-block">
+            <h1>Rubber Brand Times</h1>
+            <p>Kuwait siren stories • birthdays • random memories</p>
+          </div>
+        </div>
+        <div class="tagline">
+          <div class="tag-dot"></div>
+          Private edition for the crew only
+        </div>
+      </header>
+
+      <!-- Login panel -->
+      <div class="login-card" id="login-card">
+        <div class="pill">
+          <span></span>
+          FRIENDS ACCESS ONLY
+        </div>
+        <h2>Welcome back, legend.</h2>
+        <p>Type the secret password to open today’s edition of Rubber Brand Times.</p>
+        <div class="field">
+          <label for="username">Nickname (optional)</label>
+          <input type="text" id="username" placeholder="Example: Kuwait Siren King" />
+        </div>
+        <div class="field">
+          <label for="password">Crew Password</label>
+          <input type="password" id="password" placeholder="Type our secret word" />
+        </div>
+        <button class="btn" id="login-btn">
+          Unlock today
+        </button>
+        <div class="error" id="error-msg"></div>
+        <p style="font-size:10px;color:#6b7280;margin-top:6px;">
+          Tip: This login is just for hiding from randoms. Don’t use a serious password you use anywhere else.
+        </p>
+      </div>
+
+      <!-- Main content -->
+      <div class="content" id="content">
+        <!-- Left: News + Birthdays -->
+        <div class="section">
+          <div class="header-row">
+            <h3>
+              Daily updates
+              <span class="badge">News &amp; birthdays</span>
+            </h3>
+            <span class="today-label" id="today-label"></span>
+          </div>
+
+          <div class="pill-row">
+            <span class="pill-small red">Kuwait siren war</span>
+            <span class="pill-small blue">Birthdays</span>
+            <span class="pill-small green">Random vibes</span>
+          </div>
+
+          <!-- Form to add new item -->
+          <form id="add-form">
+            <div class="form-grid">
+              <div class="field">
+                <label for="type">Type</label>
+                <input list="types" id="type" placeholder="news / birthday / memory" />
+                <datalist id="types">
+                  <option value="news"></option>
+                  <option value="birthday"></option>
+                  <option value="memory"></option>
+                  <option value="siren"></option>
+                </datalist>
+              </div>
+              <div class="field">
+                <label for="title">Title</label>
+                <input type="text" id="title" placeholder="Example: Kuwait siren at 7:30 PM" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" placeholder="Write the story, wish or small detail here..."></textarea>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 4px;">
+              + Add to today
+            </button>
+          </form>
+
+          <div class="divider"></div>
+
+          <!-- Items list -->
+          <div class="header-row">
+            <span style="font-size:12px;color:#9ca3af;">Timeline</span>
+            <span class="count-badge" id="count-badge">0 items</span>
+          </div>
+          <div class="items" id="items"></div>
+        </div>
+
+        <!-- Right: Side panel -->
+        <div class="section">
+          <div class="header-row">
+            <h3>
+              Crew corner
+            </h3>
+            <span class="logout" id="logout-btn">Log out</span>
+          </div>
+          <p style="font-size:12px;color:#d1d5db;margin-bottom:8px;">
+            This space is just for us: Kuwait siren history, birthday shout‑outs and random chaos from the group.
+          </p>
+
+          <div class="divider"></div>
+
+          <button class="btn-secondary" id="clear-btn">
+            <span class="dot"></span>
+            Clear everything on this device
+          </button>
+
+          <p style="font-size:11px;color:#9ca3af;margin-top:8px;">
+            All news &amp; wishes are saved only inside your browser using local storage.  
+            If you clear them here, they disappear from this device only.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // CHANGE THIS to your secret password for friends
+    const SECRET_PASSWORD = "rubberband";
+
+    const loginCard = document.getElementById("login-card");
+    const content = document.getElementById("content");
+    const loginBtn = document.getElementById("login-btn");
+    const passwordInput = document.getElementById("password");
+    const usernameInput = document.getElementById("username");
+    const errorMsg = document.getElementById("error-msg");
+    const todayLabel = document.getElementById("today-label");
+    const itemsContainer = document.getElementById("items");
+    const form = document.getElementById("add-form");
+    const logoutBtn = document.getElementById("logout-btn");
+    const clearBtn = document.getElementById("clear-btn");
+    const countBadge = document.getElementById("count-badge");
+
+    const STORAGE_KEY = "rubberBrandTimesItems";
+    const LOGIN_KEY = "rubberBrandTimesLoggedIn";
+
+    function formatDate() {
+      const now = new Date();
+      const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
+      return now.toLocaleDateString(undefined, options);
+    }
+
+    function updateTodayLabel() {
+      todayLabel.textContent = "Today · " + formatDate();
+    }
+
+    function getItems() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function renderItems() {
+      const items = getItems().sort((a, b) => b.created - a.created);
+      itemsContainer.innerHTML = "";
+      if (items.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "item";
+        empty.innerHTML = `
+          <div class="item-header">
+            <div class="item-title">Nothing yet. Add the first memory.</div>
+          </div>
+          <div class="item-body">Start with today’s Kuwait siren, a birthday wish, or one funny thing that happened.</div>
+        `;
+        itemsContainer.appendChild(empty);
+      } else {
+        items.forEach((it) => {
+          const div = document.createElement("div");
+          div.className = "item";
+          const date = new Date(it.created);
+          const dateStr = date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+          div.innerHTML = `
+            <div class="item-header">
+              <div class="item-title">${it.title || "Untitled"}</div>
+              <div class="item-date">${dateStr}</div>
+            </div>
+            <div class="item-body">${(it.message || "").replace(/\n/g, "<br>")}</div>
+            <div class="item-tag">${(it.type || "note").toUpperCase()}</div>
+          `;
+          itemsContainer.appendChild(div);
+        });
+      }
+      countBadge.textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
+    }
+
+    function doLogin() {
+      const pwd = passwordInput.value.trim();
+      if (!pwd) {
+        errorMsg.textContent = "Password cannot be empty.";
+        return;
+      }
+      if (pwd !== SECRET_PASSWORD) {
+        errorMsg.textContent = "Wrong password. Ask the group again.";
+        return;
+      }
+      errorMsg.textContent = "";
+      loginCard.style.display = "none";
+      content.classList.add("visible");
+      localStorage.setItem(LOGIN_KEY, "1");
+    }
+
+    loginBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      doLogin();
+    });
+
+    passwordInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        doLogin();
+      }
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const type = document.getElementById("type").value.trim() || "note";
+      const title = document.getElementById("title").value.trim();
+      const message = document.getElementById("message").value.trim();
+      if (!message && !title) {
+        return;
+      }
+      const items = getItems();
+      items.push({
+        type,
+        title,
+        message,
+        created: Date.now(),
+        author: usernameInput.value.trim() || null,
+      });
+      saveItems(items);
+      renderItems();
+      document.getElementById("message").value = "";
+      document.getElementById("title").value = "";
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem(LOGIN_KEY);
+      content.classList.remove("visible");
+      loginCard.style.display = "block";
+      passwordInput.value = "";
+      errorMsg.textContent = "";
+    });
+
+    clearBtn.addEventListener("click", () => {
+      if (confirm("Clear all news & wishes on this device? This cannot be undone.")) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderItems();
+      }
+    });
+
+    updateTodayLabel();
+    renderItems();
+
+    if (localStorage.getItem(LOGIN_KEY) === "1") {
+      loginCard.style.display = "none";
+      content.classList.add("visible");
+    }
+  </script>
+</body>
+</html>
