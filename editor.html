@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rubber Brand Times - Editor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:20px}#auth-screen{display:flex;justify-content:center;align-items:center;min-height:100vh}.auth-card{background:#fff;padding:40px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;max-width:400px;width:100%}.auth-card h1{margin-bottom:20px;color:#333}.auth-card input{width:100%;padding:15px;margin:15px 0;border:2px solid #e0e0e0;border-radius:10px;font-size:16px}.auth-card input:focus{outline:0;border-color:#667eea}.auth-card button{width:100%;padding:15px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}.hint{margin-top:15px;color:#999;font-size:14px}#editor-screen{max-width:1200px;margin:0 auto}.header{background:#fff;padding:20px;border-radius:15px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 5px 20px rgba(0,0,0,.1)}.header h1{color:#333;font-size:24px}.logout-btn{padding:10px 20px;background:#ff4757;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700}.editor-container{background:#fff;padding:30px;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,.1);margin-bottom:20px}.form-group{margin-bottom:25px}.form-group label{display:block;margin-bottom:8px;color:#333;font-weight:600;font-size:14px;text-transform:uppercase}.form-group input,.form-group textarea{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:8px;font-size:15px;font-family:inherit}.form-group input:focus,.form-group textarea:focus{outline:0;border-color:#667eea}.form-group textarea{resize:vertical;min-height:100px}.actions{display:flex;gap:15px;margin-top:30px}.actions button{flex:1;padding:15px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}.save-btn{background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff}.preview-btn{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}.export-btn{background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff}#preview-section{background:#fff;padding:30px;border-radius:15px;margin-top:20px;box-shadow:0 5px 20px rgba(0,0,0,.1)}#preview-section h2{margin-bottom:20px;color:#333}#preview-content{padding:20px;background:#f8f9fa;border-radius:10px;border-left:4px solid #667eea}.saved-editions{background:#fff;padding:30px;border-radius:15px;margin-top:20px;box-shadow:0 5px 20px rgba(0,0,0,.1)}.saved-editions h2{margin-bottom:20px;color:#333}.edition-item{padding:15px;background:#f8f9fa;border-radius:10px;margin-bottom:10px;border-left:4px solid #667eea;display:flex;justify-content:space-between;align-items:center}.edition-info h3{color:#333}.edition-info p{color:#666;font-size:14px}.edition-actions button{margin-left:10px;padding:8px 15px;border:none;border-radius:6px;cursor:pointer;font-weight:700}.load-btn{background:#667eea;color:#fff}.delete-btn{background:#ff4757;color:#fff}
+</style>
+</head>
+<body>
+<div id="auth-screen">
+<div class="auth-card">
+<h1>🔒 Editor Access</h1>
+<input type="password" id="editor-password" placeholder="Enter editor password">
+<button onclick="checkPassword()">Unlock Editor</button>
+<p class="hint">Hint: rubbereditor2026</p>
+</div>
+</div>
+<div id="editor-screen" style="display:none">
+<div class="header">
+<h1>📰 Rubber Brand Times - Editor</h1>
+<button onclick="logout()" class="logout-btn">Logout</button>
+</div>
+<div class="editor-container">
+<div class="form-group">
+<label>Date</label>
+<input type="date" id="edition-date">
+</div>
+<div class="form-group">
+<label>Title</label>
+<input type="text" id="edition-title" placeholder="March 12, 2026 - Kuwait Edition">
+</div>
+<div class="form-group">
+<label>Content (HTML supported)</label>
+<textarea id="main-content" rows="15" placeholder="Write content here..."></textarea>
+</div>
+<div class="form-group">
+<label>Highlights</label>
+<textarea id="highlights" rows="5" placeholder="• Highlight 1"></textarea>
+</div>
+<div class="form-group">
+<label>Image URL (optional)</label>
+<input type="text" id="featured-image" placeholder="https://example.com/img.jpg">
+</div>
+<div class="actions">
+<button onclick="saveEdition()" class="save-btn">💾 Save</button>
+<button onclick="previewEdition()" class="preview-btn">👁️ Preview</button>
+<button onclick="exportJSON()" class="export-btn">📥 Export</button>
+</div>
+</div>
+<div id="preview-section" style="display:none">
+<h2>Preview</h2>
+<div id="preview-content"></div>
+</div>
+<div class="saved-editions">
+<h2>Saved Editions</h2>
+<div id="editions-list"></div>
+</div>
+</div>
+<script>
+const EDITOR_PASSWORD='rubbereditor2026';function checkPassword(){document.getElementById('editor-password').value===EDITOR_PASSWORD?(document.getElementById('auth-screen').style.display='none',document.getElementById('editor-screen').style.display='block',loadSavedEditions()):alert('❌ Wrong password!')}document.addEventListener('DOMContentLoaded',()=>{const e=document.getElementById('editor-password');e&&e.addEventListener('keypress',e=>{'Enter'===e.key&&checkPassword()});const t=document.getElementById('edition-date');t&&(t.value=new Date().toISOString().split('T')[0])});function logout(){document.getElementById('auth-screen').style.display='flex',document.getElementById('editor-screen').style.display='none',document.getElementById('editor-password').value=''}function saveEdition(){const e={id:Date.now(),date:document.getElementById('edition-date').value,title:document.getElementById('edition-title').value,content:document.getElementById('main-content').value,highlights:document.getElementById('highlights').value,featuredImage:document.getElementById('featured-image').value,createdAt:new Date().toISOString()};if(!e.date||!e.title||!e.content)return void alert('⚠️ Fill required fields!');let t=JSON.parse(localStorage.getItem('rbt-editions')||'[]');t.unshift(e),localStorage.setItem('rbt-editions',JSON.stringify(t)),alert('✅ Saved!'),loadSavedEditions()}function previewEdition(){const e=document.getElementById('edition-title').value,t=document.getElementById('main-content').value,n=document.getElementById('highlights').value,d=document.getElementById('featured-image').value;let i=`<h1>${e||'Untitled'}</h1>${d?`<img src="${d}" style="max-width:100%;border-radius:10px;margin:20px 0">`:''}  <div style="margin:20px 0">${t||'No content...'}</div>${n?`<div style="background:#fff3cd;padding:15px;border-radius:8px;margin-top:20px"><strong>📌 Highlights:</strong><br>${n.replace(/\n/g,'<br>')}</div>`:''}`;const a=document.getElementById('preview-section');document.getElementById('preview-content').innerHTML=i,a.style.display='block',a.scrollIntoView({behavior:'smooth'})}function exportJSON(){const e={date:document.getElementById('edition-date').value,title:document.getElementById('edition-title').value,content:document.getElementById('main-content').value,highlights:document.getElementById('highlights').value,featuredImage:document.getElementById('featured-image').value},t=new Blob([JSON.stringify(e,null,2)],{type:'application/json'}),n=URL.createObjectURL(t),d=document.createElement('a');d.href=n,d.download=`rbt-${e.date||'draft'}.json`,d.click(),URL.revokeObjectURL(n),alert('📥 Downloaded!')}function loadSavedEditions(){const e=JSON.parse(localStorage.getItem('rbt-editions')||'[]'),t=document.getElementById('editions-list');0===e.length?t.innerHTML='<p style="color:#999">No editions yet.</p>':t.innerHTML=e.map(e=>`<div class="edition-item"><div class="edition-info"><h3>${e.title}</h3><p>📅 ${e.date}</p></div><div class="edition-actions"><button class="load-btn" onclick="loadEdition(${e.id})">Load</button><button class="delete-btn" onclick="deleteEdition(${e.id})">Delete</button></div></div>`).join('')}function loadEdition(e){const t=JSON.parse(localStorage.getItem('rbt-editions')||'[]').find(t=>t.id===e);t&&(document.getElementById('edition-date').value=t.date,document.getElementById('edition-title').value=t.title,document.getElementById('main-content').value=t.content,document.getElementById('highlights').value=t.highlights||'',document.getElementById('featured-image').value=t.featuredImage||'',alert('✅ Loaded!'),window.scrollTo({top:0,behavior:'smooth'}))}function deleteEdition(e){if(!confirm('⚠️ Delete this edition?'))return;let t=JSON.parse(localStorage.getItem('rbt-editions')||'[]');t=t.filter(t=>t.id!==e),localStorage.setItem('rbt-editions',JSON.stringify(t)),alert('🗑️ Deleted!'),loadSavedEditions()}
+</script>
+</body>
+</html>
